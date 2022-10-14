@@ -3,6 +3,7 @@
 \docType{package}
 \name{deconstructSigs}
 \alias{deconstructSigs}
+\alias{deconstructSigs-package}
 \title{deconstructSigs}
 \description{
 Takes sample information in the form of the fraction of mutations
@@ -20,6 +21,15 @@ mutational profile.
   }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/raerose01/deconstructSigs}
+  \item Report bugs at \url{https://github.com/raerose01/deconstructSigs/issues}
+}
+
+}
 \author{
 Rachel Rosenthal rachel.rosenthal.14@ucl.ac.uk
 }
+\keyword{internal}

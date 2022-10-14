@@ -26,8 +26,9 @@ outputted
 }
 \examples{
 example.output <- readRDS(
-    system.file("extdata", "example.output.rds",
-                package = "deconstructSigs")
+  system.file("extdata", "example.output.rds",
+    package = "deconstructSigs"
+  )
 )
 makePie(example.output)
 }

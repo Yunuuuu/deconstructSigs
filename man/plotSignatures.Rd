@@ -25,8 +25,9 @@ mutational spectrum and the calculated one
 }
 \examples{
 example.output <- readRDS(
-    system.file("extdata", "example.output.rds",
-                package = "deconstructSigs")
+  system.file("extdata", "example.output.rds",
+    package = "deconstructSigs"
+  )
 )
 plotSignatures(example.output, sub = "example", sig.type = "SBS")
 

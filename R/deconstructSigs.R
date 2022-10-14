@@ -1,6 +1,3 @@
-#' @keywords internal
-"_PACKAGE" 
-
 #' deconstructSigs
 #'
 #' Takes sample information in the form of the fraction of mutations
@@ -19,7 +16,8 @@
 #' @docType package
 #' @author Rachel Rosenthal rachel.rosenthal.14@ucl.ac.uk
 #' @name deconstructSigs
-NULL
+#' @keywords internal
+"_PACKAGE"
 
 ## usethis namespace: start
 #' @importFrom data.table .BY

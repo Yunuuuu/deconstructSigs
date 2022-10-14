@@ -7,14 +7,23 @@
 #'   mutation as column names
 #' @keywords internal
 formatContexts <- function(contexts) {
-  for_plotting <- reshape2::melt(contexts)
-  colnames(for_plotting)[1] <- "sample.id"
-  colnames(for_plotting)[2] <- "full_context"
-  colnames(for_plotting)[3] <- "fraction"
-  for_plotting$mutation <- substr(for_plotting$full_context, 3, 5)
-  for_plotting$full_context <- as.factor(for_plotting$full_context)
-  for_plotting$full_context <- factor(for_plotting$full_context, levels = for_plotting$full_context, ordered = T)
-  return(for_plotting)
+  contexts <- data.table::as.data.table(contexts, keep.rownames = ".id")
+  for_plotting <- data.table::melt(
+    contexts,
+    id.vars = ".id"
+  )
+  data.table::setnames(for_plotting, c("sample.id", "full_context", "fraction"))
+  for_plotting[
+    , mutation := substr(full_context, 3, 5)
+  ]
+  for_plotting[
+    , full_context := factor(
+      full_context, levels = unique(full_context), 
+      ordered = TRUE
+    )
+  ]
+  data.table::setDF(for_plotting)
+  for_plotting
 }
 
 #' Plots the result from whichSignatures()
@@ -32,8 +41,9 @@ formatContexts <- function(contexts) {
 #' @export
 #' @examples
 #' example.output <- readRDS(
-#'     system.file("extdata", "example.output.rds",
-#'                 package = "deconstructSigs")
+#'   system.file("extdata", "example.output.rds",
+#'     package = "deconstructSigs"
+#'   )
 #' )
 #' plotSignatures(example.output, sub = "example", sig.type = "SBS")
 #'
@@ -143,8 +153,9 @@ plotSignatures <- function(sigs.output, sig.type = "SBS", sub = "") {
 #' @export
 #' @examples
 #' example.output <- readRDS(
-#'     system.file("extdata", "example.output.rds",
-#'                 package = "deconstructSigs")
+#'   system.file("extdata", "example.output.rds",
+#'     package = "deconstructSigs"
+#'   )
 #' )
 #' plotTumor(example.output[["tumor"]], sub = "example")
 #'
@@ -199,8 +210,9 @@ plotTumor <- function(tumor, sub = "") {
 #' @export
 #' @examples
 #' example.output <- readRDS(
-#'     system.file("extdata", "example.output.rds",
-#'                 package = "deconstructSigs")
+#'   system.file("extdata", "example.output.rds",
+#'     package = "deconstructSigs"
+#'   )
 #' )
 #' makePie(example.output)
 makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL) {

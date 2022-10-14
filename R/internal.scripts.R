@@ -1,4 +1,3 @@
-
 #' Calculates error
 #'
 #' Finds error between calculated trinucleotide context fractions and inputted

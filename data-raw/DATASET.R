@@ -5,6 +5,27 @@ load("data-raw/signatures.cosmic.rda")
 load("data-raw/signatures.dbs.cosmic.v3.may2019.rda")
 load("data-raw/signatures.exome.cosmic.v3.may2019.rda")
 load("data-raw/signatures.genome.cosmic.v3.may2019.rda")
+
+signatures.nature2013 <- tibble::rownames_to_column(
+    as.data.frame(t(signatures.nature2013), make.names = FALSE), 
+    var = "var"
+)
+signatures.cosmic <- tibble::rownames_to_column(
+    as.data.frame(t(signatures.cosmic), make.names = FALSE), 
+    var = "var"
+)
+signatures.dbs.cosmic.v3.may2019 <- tibble::rownames_to_column(
+    as.data.frame(t(signatures.dbs.cosmic.v3.may2019), make.names = FALSE), 
+    var = "var"
+)
+signatures.exome.cosmic.v3.may2019 <- tibble::rownames_to_column(
+    as.data.frame(t(signatures.exome.cosmic.v3.may2019), make.names = FALSE), 
+    var = "var"
+)
+signatures.genome.cosmic.v3.may2019 <- tibble::rownames_to_column(
+    as.data.frame(t(signatures.genome.cosmic.v3.may2019), make.names = FALSE),
+    var = "var"
+)
 usethis::use_data(
     signatures.nature2013,
     signatures.cosmic,
@@ -13,9 +34,9 @@ usethis::use_data(
     signatures.genome.cosmic.v3.may2019,
     overwrite = TRUE
 )
-ncol(signatures.dbs.cosmic.v3.may2019) # 78L
-ncol(signatures.exome.cosmic.v3.may2019) # 96L
-ncol(signatures.genome.cosmic.v3.may2019) # 96L
+nrow(signatures.dbs.cosmic.v3.may2019) # 78L
+nrow(signatures.exome.cosmic.v3.may2019) # 96L
+nrow(signatures.genome.cosmic.v3.may2019) # 96L
 
 load("data-raw/dbs_possible.rda")
 load("data-raw/tri.counts.genome.rda")

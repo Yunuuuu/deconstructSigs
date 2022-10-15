@@ -11,9 +11,8 @@
 #' @param sig.type Are SBS or DBS signatures being used?
 #' @param signatures.ref Either a data frame or a file path (can be also a URL
 #'   starting http://, file://, etc), whose rows should be signatures and
-#'   columns should be trinucleotide or dinucleotide contexts, if not, please
-#'   use `sig.transpose`. Default: NULL, means
-#'   `signatures.genome.cosmic.v3.may2019` for sig.type "SBS",
+#'   columns should be trinucleotide or dinucleotide contexts. Default: NULL,
+#'   means `signatures.genome.cosmic.v3.may2019` for sig.type "SBS",
 #'   "signatures.dbs.cosmic.v3.may2019" for sig.type "DBS".
 #' @param sig.transpose should `signatures.ref` be transposed? Default: `TRUE`,
 #' which is ofthen the case where we derived signature from COSMIC.
@@ -89,9 +88,8 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
       DBS = "signatures.dbs.cosmic.v3.may2019"
     )
     signatures.ref <- read_data(signatures.ref)
-  } else {
-    signatures.ref <- parse_sig(signatures.ref, transpose = sig.transpose)
   }
+  signatures.ref <- parse_sig(signatures.ref, transpose = sig.transpose)
   check_sig(signatures.ref, sig.type = sig.type)
 
   # prepare data --------------------------------------------------------
@@ -152,7 +150,7 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
       }
       deconstruct_sig_core(
         tumor = sample_tumor,
-        signatures.ref = signatures.ref,
+        signatures = signatures.ref,
         associated = associated,
         signatures.limit = signatures.limit,
         signature.cutoff = signature.cutoff
@@ -165,7 +163,7 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
   }
 }
 
-deconstruct_sig_core <- function(tumor, signatures.ref,
+deconstruct_sig_core <- function(tumor, signatures,
                                  associated = NULL,
                                  signatures.limit = NA,
                                  signature.cutoff = 0.06) {

@@ -31,9 +31,8 @@ Default: \code{NULL}, means run deconstructSigs for all samples (rows)}
 
 \item{signatures.ref}{Either a data frame or a file path (can be also a URL
 starting http://, file://, etc), whose rows should be signatures and
-columns should be trinucleotide or dinucleotide contexts, if not, please
-use \code{sig.transpose}. Default: NULL, means
-\code{signatures.genome.cosmic.v3.may2019} for sig.type "SBS",
+columns should be trinucleotide or dinucleotide contexts. Default: NULL,
+means \code{signatures.genome.cosmic.v3.may2019} for sig.type "SBS",
 "signatures.dbs.cosmic.v3.may2019" for sig.type "DBS".}
 
 \item{sig.transpose}{should \code{signatures.ref} be transposed? Default: \code{TRUE},

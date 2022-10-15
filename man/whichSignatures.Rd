@@ -39,15 +39,15 @@ means \code{signatures.genome.cosmic.v3.may2019} for sig.type "SBS",
 which is often the case where we derived signature from COSMIC.}
 
 \item{tri.counts.method}{Only used when sig.type is \code{SBS}. when used,
-\code{contexts.needed} will always be set to \code{TRUE}. Set to either:
+\code{contexts.needed} will always be set to \code{TRUE}. Set to \code{FALSE} or either:
 \itemize{
-\item 'exome' -- normalized by number of times each trinucleotide context is
+\item \code{exome} -- normalized by number of times each trinucleotide context is
 observed in the exome
-\item 'genome' -- normalized by number of times each trinucleotide context
+\item \code{genome} -- normalized by number of times each trinucleotide context
 is observed in the genome
-\item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
+\item \code{exome2genome} -- multiplied by a ratio of that trinucleotide's
 occurence in the genome to the trinucleotide's occurence in the exome
-\item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
+\item \code{genome2exome} -- multiplied by a ratio of that trinucleotide's
 occurence in the exome to the trinucleotide's occurence in the genome
 }}
 

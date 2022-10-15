@@ -17,15 +17,15 @@
 #' @param sig.transpose should `signatures.ref` be transposed? Default: `TRUE`,
 #' which is often the case where we derived signature from COSMIC.
 #' @param tri.counts.method Only used when sig.type is `SBS`. when used,
-#' `contexts.needed` will always be set to `TRUE`. Set to either:
+#' `contexts.needed` will always be set to `TRUE`. Set to `FALSE` or either:
 #' \itemize{
-#'  \item 'exome' -- normalized by number of times each trinucleotide context is
+#'  \item `exome` -- normalized by number of times each trinucleotide context is
 #'   observed in the exome
-#'  \item 'genome' -- normalized by number of times each trinucleotide context
+#'  \item `genome` -- normalized by number of times each trinucleotide context
 #'   is observed in the genome
-#' \item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
+#' \item `exome2genome` -- multiplied by a ratio of that trinucleotide's
 #'   occurence in the genome to the trinucleotide's occurence in the exome
-#' \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
+#' \item `genome2exome` -- multiplied by a ratio of that trinucleotide's
 #'   occurence in the exome to the trinucleotide's occurence in the genome
 #' }
 #' @param contexts.needed Used for both sig.type "SBS" and "DBS". FALSE if

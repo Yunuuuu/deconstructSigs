@@ -6,12 +6,8 @@ parse_sig <- function(x, transpose = TRUE) {
   } else {
     stop("x should be a data.frame or a file path (can be also a URL starting http://, file://, etc) read as a data.frame")
   }
-  sig.df <- as.data.frame(
-    data[, -1L],
-    row.names = as.character(data[[1L]]),
-    make.names = FALSE,
-    stringsAsFactors = FALSE
-  )
+  data.table::setDF(data)
+  sig.df <- column_to_rownames(data, 1L)
   if (transpose) {
     sig.df <- as.data.frame(
       t(as.matrix(sig.df)),

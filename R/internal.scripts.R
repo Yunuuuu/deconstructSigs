@@ -125,3 +125,10 @@ read_data <- function(x, package = "deconstructSigs") {
   )
   get(res[[1]], envir = environment())
 }
+
+column_to_rownames <- function(.data, var) {
+  .data <- as.data.frame(.data)
+  rownames(.data) <- .data[[var]]
+  .data[[var]] <- NULL
+  .data
+}

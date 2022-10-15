@@ -35,7 +35,7 @@
 #' @examples
 #' \dontrun{
 #' sample.mut.ref <- readRDS(
-#'   system.file("extdata", "randomly.generated.tumors.rds",
+#'   system.file("extdata", "sample.mut.ref.rds",
 #'     package = "deconstructSigs"
 #'   )
 #' )
@@ -81,7 +81,7 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
       ]
     ]
     mut[, dbs_condensed := factor(dbs_condensed, unique(dbs_condensed))]
-    final.df <- as.data.frame.matrix(
+    final.df <- as.data.frame(
       table(mut[["sample.id"]], mut[["dbs_condensed"]]),
       stringsAsFactors = FALSE
     )
@@ -179,7 +179,6 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
     )
     tricontext <- factor(tricontext, levels = generate_sbs_features())
 
-
     # Generate all possible trinucleotide contexts
     final.df <- as.data.frame(
       table(
@@ -196,10 +195,8 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
       drop = FALSE,
       value.var = "counts"
     )
-    final.df <- as.data.frame(
-      final.df[, !"samples"],
-      rownames = final.df[["samples"]]
-    )
+    final.df <- column_to_rownames(final.df, "samples")
+
     # previous implementation  -----------------------------
     # mut$std.mutcat <- paste0(mut[["ref"]], ">", mut[["alt"]])
     # mut$std.mutcat[rev_idx] <- gsub("G", "g", gsub("C", "c", gsub("T", "t", gsub("A", "a", mut$std.mutcat[rev_idx])))) # to lowercase

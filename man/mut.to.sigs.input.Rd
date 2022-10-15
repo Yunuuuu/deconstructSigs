@@ -65,7 +65,7 @@ the following transformation will be done: "1" -> "chr1"; "MT" -> "chrM";
 \examples{
 \dontrun{
 sample.mut.ref <- readRDS(
-  system.file("extdata", "randomly.generated.tumors.rds",
+  system.file("extdata", "sample.mut.ref.rds",
     package = "deconstructSigs"
   )
 )

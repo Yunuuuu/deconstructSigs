@@ -82,9 +82,21 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
     ]
     mut[, dbs_condensed := factor(dbs_condensed, unique(dbs_condensed))]
     final.df <- as.data.frame(
-      table(mut[["sample.id"]], mut[["dbs_condensed"]]),
-      stringsAsFactors = FALSE
+      table(
+        samples = as.character(mut[["sample.id"]]),
+        features = mut[["dbs_condensed"]]
+      ),
+      stringsAsFactors = FALSE,
+      responseName = "counts"
     )
+    data.table::setDT(final.df)
+    final.df <- data.table::dcast(
+      final.df,
+      samples ~ features,
+      drop = FALSE,
+      value.var = "counts"
+    )
+    final.df <- column_to_rownames(final.df, "samples")
   }
 
   # parse SBS --------------------------------------------

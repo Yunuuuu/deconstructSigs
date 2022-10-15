@@ -109,6 +109,7 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
   } else {
     stop("Input tumor.ref needs to be a data frame or location of input text file", call. = FALSE)
   }
+
   if (identical(sig.type, "SBS") && !isFALSE(tri.counts.method)) {
     tri.counts.method <- match.arg(
       tri.counts.method,
@@ -131,16 +132,21 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
       exome.range = exome.range
     )
   }
+
+  # Do context normalization ------------------------------------------
   tumor <- as.matrix(tumor)
   if (isTRUE(contexts.needed)) {
     tumor <- tumor / rowSums(tumor)
   }
+
+  # extract sample names for analysis -----------------------------------
   if (is.null(sample.id)) {
     sample.id <- rownames(tumor)
   } else {
     sample.id <- intersect(rownames(tumor), as.character(sample.id))
   }
 
+  # run deconstructSigs ------------------------------------------------
   if (length(sample.id)) {
     # Take patient id given
     res <- lapply(sample.id, function(x) {
@@ -172,7 +178,7 @@ deconstruct_sig_core <- function(tumor, signatures,
   original.sigs <- signatures
 
   # Check column names are formatted correctly
-  if (length(colnames(tumor)[colnames(tumor) %in% colnames(signatures)]) < length(colnames(signatures))) {
+  if (sum(colnames(tumor) %in% colnames(signatures)) < length(colnames(signatures))) {
     colnames(tumor) <- changeColumnNames(colnames(tumor))
     if (length(colnames(tumor)[colnames(tumor) %in% colnames(signatures)]) < length(colnames(signatures))) {
       stop("Check column names on input file")

@@ -80,7 +80,9 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
         match(paste(ref, alt, sep = ">"), dbs_possible$dbs)
       ]
     ]
-    mut[, dbs_condensed := factor(dbs_condensed, unique(dbs_condensed))]
+    mut[, dbs_condensed := factor(
+      dbs_condensed, unique(dbs_possible$dbs_condenseds)
+    )]
     final.df <- as.data.frame(
       table(
         samples = as.character(mut[["sample.id"]]),
@@ -89,14 +91,6 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
       stringsAsFactors = FALSE,
       responseName = "counts"
     )
-    data.table::setDT(final.df)
-    final.df <- data.table::dcast(
-      final.df,
-      samples ~ features,
-      drop = FALSE,
-      value.var = "counts"
-    )
-    final.df <- column_to_rownames(final.df, "samples")
   }
 
   # parse SBS --------------------------------------------
@@ -200,14 +194,6 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
       stringsAsFactors = FALSE,
       responseName = "counts"
     )
-    data.table::setDT(final.df)
-    final.df <- data.table::dcast(
-      final.df,
-      samples ~ features,
-      drop = FALSE,
-      value.var = "counts"
-    )
-    final.df <- column_to_rownames(final.df, "samples")
 
     # previous implementation  -----------------------------
     # mut$std.mutcat <- paste0(mut[["ref"]], ">", mut[["alt"]])
@@ -261,7 +247,14 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
     # all(colnames(final.df) == colnames(final.df2))
     # all(final.df == final.df2) # [1] TRUE
   }
-
+  data.table::setDT(final.df)
+  final.df <- data.table::dcast(
+    final.df,
+    samples ~ features,
+    drop = FALSE,
+    value.var = "counts"
+  )
+  final.df <- column_to_rownames(final.df, "samples")
   bad_samples <- rownames(final.df)[rowSums(final.df) <= 50]
   if (length(bad_samples) > 0L) {
     bad_samples <- paste(bad_samples, collapse = ", ")

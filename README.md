@@ -1,7 +1,13 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-deconstructSigs
+deconstructSigs with genome-agnostic
 ===============
 
+# main modification
+`whichSignatures` from original deconstructSigs can only use default hg19 to calculate counts fraction. Here, we provide two extra arguments - genome.ref and exome.range to enable user to use their own genome refence and exon ranges.
+
+Also, we strenthen the function by enable the possibilities to provide a URL as the signature.ref, in this way, we can easily use the latest COSMIC signature (<https://cancer.sanger.ac.uk/signatures/downloads/>).
+
+# Intention
 deconstructSigs aims to determine the contribution of known mutational processes to a tumor sample. By using deconstructSigs, one can:
 
 -   Determine the weights of each mutational signature contributing to an individual tumor sample

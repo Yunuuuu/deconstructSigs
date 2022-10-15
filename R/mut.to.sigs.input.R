@@ -257,6 +257,7 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
     drop = FALSE,
     value.var = "counts"
   )
+  data.table::setDF(final.df)
   final.df <- column_to_rownames(final.df, "samples")
   bad_samples <- rownames(final.df)[rowSums(final.df) <= 50]
   if (length(bad_samples) > 0L) {

@@ -13,6 +13,6 @@ changeColumnNames(col)
 Returns a newly formatted vector of column names
 }
 \description{
-Changes the way the column names are formatted from nxn.y to the n[x>y]n format
+Changes the way the column names are formatted from nxn.y to the n\link{x>y}n format
 }
 \keyword{internal}

@@ -6,7 +6,7 @@
 \title{Example input to mut.to.sigs.input()}
 \format{
 A data frame of 657 rows and 5 column that contains example mutations
- which could be used in mut.to.sigs.input()
+which could be used in mut.to.sigs.input()
 }
 \source{
 \url{http://cancergenome.nih.gov/}

@@ -14,8 +14,8 @@ object.}
 }
 \value{
 A data frame that contains sample IDs for the rows and trinucleotide
-  contexts for the columns. Each entry is the count of how many times a
-  mutation with that trinucleotide context is seen in the sample.
+contexts for the columns. Each entry is the count of how many times a
+mutation with that trinucleotide context is seen in the sample.
 }
 \description{
 Given a VCF file, outputs a data frame with counts of how frequently a

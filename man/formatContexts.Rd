@@ -11,7 +11,7 @@ formatContexts(contexts)
 }
 \value{
 Returns a data frame with sample.id, full_context, fraction, and
-  mutation as column names
+mutation as column names
 }
 \description{
 Makes the contexts useable in plotSignatures()

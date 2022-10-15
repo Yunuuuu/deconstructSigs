@@ -15,7 +15,7 @@ getError(tumor, signatures, w)
 }
 \value{
 Returns the sum squared error between calculated and actual
-  trinucleotide context fractions
+trinucleotide context fractions
 }
 \description{
 Finds error between calculated trinucleotide context fractions and inputted

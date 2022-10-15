@@ -16,8 +16,8 @@ if wanted}
 }
 \value{
 Plots the trinucleotide frequency for the given tumor on the top
-  panel, the calculated one on the middle panel, and the difference between
-  the two on the bottom panel.
+panel, the calculated one on the middle panel, and the difference between
+the two on the bottom panel.
 }
 \description{
 Uses the output from whichSignatures() and creates a plot of the given tumor

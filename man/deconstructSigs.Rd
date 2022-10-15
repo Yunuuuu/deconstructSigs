@@ -14,11 +14,11 @@ mutational profile.
 \section{Main functions}{
 
 \itemize{
-  \item \code{\link{whichSignatures}}
-  \item \code{\link{mut.to.sigs.input}}
-  \item \code{\link{plotSignatures}}
-  \item \code{\link{makePie}}
-  }
+\item \code{\link{whichSignatures}}
+\item \code{\link{mut.to.sigs.input}}
+\item \code{\link{plotSignatures}}
+\item \code{\link{makePie}}
+}
 }
 
 \seealso{

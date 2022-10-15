@@ -22,7 +22,7 @@ Returns the trinucleotide context fraction
 \description{
 Determines trinucleotide context fraction from a mutation counts list. Given
 a data frame or .txt file or mutation counts with columns as trincucleotide
-contexts in the form A[C>A]A and the rows as sample id's and a data frame or
+contexts in the form A\link{C>A}A and the rows as sample id's and a data frame or
 .txt file of the times each tri nucleotide context is seen in the sequencing
 region with the rows in the format ACA, the function returns a data frame of
 the mutation counts normalized by trinucleotide frequency

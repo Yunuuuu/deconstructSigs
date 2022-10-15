@@ -13,7 +13,7 @@ findSeed(tumor, signatures)
 }
 \value{
 Returns the index corresponding to the signature that best describes
-  the input data
+the input data
 }
 \description{
 Determines which single signature results in the lowest sum-squared error and

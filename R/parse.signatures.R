@@ -8,7 +8,7 @@ parse_sig <- function(x, transpose = TRUE) {
   }
   sig.df <- as.data.frame(
     data[, -1L],
-    row.names = data[[1L]],
+    row.names = as.character(data[[1L]]),
     make.names = FALSE,
     stringsAsFactors = FALSE
   )

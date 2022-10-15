@@ -92,7 +92,7 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
   # mut.lengths <- with(mut, nchar(as.character(ref)))
   # mut <- mut[which(mut.lengths == 1),]
   # mut$mut.lengths <- nchar(as.character(mut[, ref]))
-  if (sig.type == "SBS") {
+  if (identical(sig.type, "SBS")) {
     mut <- mut[
       ref %in% c("A", "T", "C", "G") &
         alt %in% c("A", "T", "C", "G") &

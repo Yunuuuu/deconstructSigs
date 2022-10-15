@@ -14,14 +14,8 @@
 getTriContextFraction <- function(mut.counts, trimer.counts.method,
                                   genome.ref = NULL, chr.list = NULL,
                                   exome.range = NULL) {
-  # if default, return mut counts that sum to 1
-  if (identical(trimer.counts.method, "default")) {
-    # make each row sum to 1
-    norm.mut.counts <- mut.counts / rowSums(mut.counts)
-    return(norm.mut.counts)
-  }
 
-  if (grepl("genome", trimer.counts.method)) {
+  if (grepl("genome", trimer.counts.method, fixed = TRUE)) {
     if (is.null(genome.ref)) {
       genome.ref <- BSgenome.Hsapiens.UCSC.hg19::BSgenome.Hsapiens.UCSC.hg19
       tri.counts.wgs <- tri.counts.genome
@@ -40,7 +34,7 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
     }
   }
 
-  if (grepl("exome", trimer.counts.method)) {
+  if (grepl("exome", trimer.counts.method, fixed = TRUE)) {
     if (is.null(exome.range)) {
       tri.counts.wes <- tri.counts.exome
     } else {
@@ -85,9 +79,7 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
     row.names = rownames(mut.counts)
   )
   colnames(norm.mut.counts) <- colnames(mut.counts)
-
-  # make each row sum to 1
-  norm.mut.counts / rowSums(norm.mut.counts)
+  norm.mut.counts
 }
 
 # From pipeline version to match signatures.txt file

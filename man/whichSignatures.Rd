@@ -7,9 +7,11 @@
 whichSignatures(
   tumor.ref = NA,
   sample.id = NULL,
+  sig.type = "SBS",
   signatures.ref = NULL,
+  sig.transpose = TRUE,
   contexts.needed = TRUE,
-  tri.counts.method = "default",
+  tri.counts.method = FALSE,
   genome.ref = NULL,
   chr.list = NULL,
   exome.range = NULL,
@@ -23,33 +25,42 @@ whichSignatures(
 rows are samples, columns are trinucleotide contexts}
 
 \item{sample.id}{Name of sample -- should be the rowname of tumor.ref.
-Default: `NULL`, means run deconstructSigs for all samples (rows)}
+Default: \code{NULL}, means run deconstructSigs for all samples (rows)}
 
-\item{signatures.ref}{Either a data frame or location of signature text file,
-where rows are signatures, columns are trinucleotide contexts. Default:
-NULL, means `signatures.nature2013`.}
+\item{sig.type}{Are SBS or DBS signatures being used?}
 
-\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is
-only mutation counts. Default: `TRUE`.}
+\item{signatures.ref}{Either a data frame or a file path (can be also a URL
+starting http://, file://, etc), whose rows should be signatures and
+columns should be trinucleotide or dinucleotide contexts, if not, please
+use \code{sig.transpose}. Default: NULL, means
+\code{signatures.genome.cosmic.v3.may2019} for sig.type "SBS",
+"signatures.dbs.cosmic.v3.may2019" for sig.type "DBS".}
 
-\item{tri.counts.method}{Set to either:
+\item{sig.transpose}{should \code{signatures.ref} be transposed? Default: \code{TRUE},
+which is ofthen the case where we derived signature from COSMIC.}
+
+\item{contexts.needed}{Used for both sig.type "SBS" and "DBS". FALSE if
+tumor.file is a context file, TRUE if it is only mutation counts. Default:
+\code{TRUE}.}
+
+\item{tri.counts.method}{Only used when sig.type is \code{SBS}. Set to either:
 \itemize{
- \item 'default' -- no further normalization
- \item 'exome' -- normalized by number of times each trinucleotide context is
-  observed in the exome \item 'genome' -- normalized by number of times each
-  trinucleotide context is observed in the genome
+\item 'exome' -- normalized by number of times each trinucleotide context is
+observed in the exome
+\item 'genome' -- normalized by number of times each trinucleotide context
+is observed in the genome
 \item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
-  occurence in the genome to the trinucleotide's occurence in the exome
+occurence in the genome to the trinucleotide's occurence in the exome
 \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
-  occurence in the exome to the trinucleotide's occurence in the genome}}
+occurence in the exome to the trinucleotide's occurence in the genome}}
 
-\item{genome.ref}{a reference genome [BSgenome] object to define
+\item{genome.ref}{a reference genome \link{BSgenome} object to define
 trinucleotide's occurence.}
 
 \item{chr.list}{what targetedd chromosome should be used in the analysis.
 Default: NULL, means all chromosome will be used to calculate fraction.}
 
-\item{exome.range}{a [GenomicRanges] object define the exome ranges.}
+\item{exome.range}{a \link{GenomicRanges} object define the exome ranges.}
 
 \item{associated}{Vector of associated signatures. If given, will narrow the
 signatures tested to only the ones listed.}
@@ -61,30 +72,32 @@ less than this amount}
 }
 \value{
 A list for every samples, the element of the list is the weights for
-  each signatures, the product when those are multiplied on the signatures,
-  the difference between the tumor sample and product, the tumor sample
-  tricontext distribution given, and the unknown weight.
+each signatures, the product when those are multiplied on the signatures,
+the difference between the tumor sample and product, the tumor sample
+tricontext distribution given, and the unknown weight.
 }
 \description{
 Determines how much of each signature is present in the sample given
 }
 \section{Normalization}{
  If the input data frame only contains the counts of
-  the mutations observed in each context, then the data frame must be
-  normalized. In these cases, the value of `contexts.needed` should be TRUE.
-  \cr The parameter, `tri.counts.method`, determines any additional
-  normalization performed. Any user provided data frames should match the
-  format of `tri.counts.exome` and `tri.counts.genome`. \cr The method of
-  normalization chosen should match how the input signatures were normalized.
-  For exome data, the 'exome2genome' method is appropriate for the signatures
-  included in this package. For whole genome data, use the 'default' method
-  to obtain consistent results.
+the mutations observed in each context, then the data frame must be
+normalized, An error will be raised if each row of the input data frame
+does not sum to 1. In these cases, the value of \code{contexts.needed} should be
+TRUE.
+\cr The parameter, \code{tri.counts.method}, determines any additional
+normalization performed for sig.type \code{SBS}. The method of normalization
+chosen should match how the input signatures were normalized. For exome
+data, the 'exome2genome' method is appropriate for the signatures included
+in this package. For whole genome data, use 'FALSE' to obtain consistent
+results.
 }
 
 \examples{
 randomly.generated.tumors <- readRDS(
-    system.file("extdata", "randomly.generated.tumors.rds",
-                package = "deconstructSigs")
+  system.file("extdata", "randomly.generated.tumors.rds",
+    package = "deconstructSigs"
+  )
 )
 test <- whichSignatures(
   tumor.ref = randomly.generated.tumors,

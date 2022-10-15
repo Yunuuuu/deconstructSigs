@@ -8,17 +8,24 @@
 #'   rows are samples, columns are trinucleotide contexts
 #' @param sample.id Name of sample -- should be the rowname of tumor.ref.
 #'   Default: `NULL`, means run deconstructSigs for all samples (rows)
-#' @param signatures.ref Either a data frame or location of signature text file,
-#'   where rows are signatures, columns are trinucleotide contexts. Default:
-#'   NULL, means `signatures.nature2013`.
-#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is
-#'   only mutation counts. Default: `TRUE`.
-#' @param tri.counts.method Set to either:
+#' @param sig.type Are SBS or DBS signatures being used?
+#' @param signatures.ref Either a data frame or a file path (can be also a URL
+#'   starting http://, file://, etc), whose rows should be signatures and
+#'   columns should be trinucleotide or dinucleotide contexts, if not, please
+#'   use `sig.transpose`. Default: NULL, means
+#'   `signatures.genome.cosmic.v3.may2019` for sig.type "SBS",
+#'   "signatures.dbs.cosmic.v3.may2019" for sig.type "DBS".
+#' @param sig.transpose should `signatures.ref` be transposed? Default: `TRUE`,
+#' which is ofthen the case where we derived signature from COSMIC.
+#' @param contexts.needed Used for both sig.type "SBS" and "DBS". FALSE if
+#'   tumor.file is a context file, TRUE if it is only mutation counts. Default:
+#'   `TRUE`.
+#' @param tri.counts.method Only used when sig.type is `SBS`. Set to either:
 #' \itemize{
-#'  \item 'default' -- no further normalization
 #'  \item 'exome' -- normalized by number of times each trinucleotide context is
-#'   observed in the exome \item 'genome' -- normalized by number of times each
-#'   trinucleotide context is observed in the genome
+#'   observed in the exome
+#'  \item 'genome' -- normalized by number of times each trinucleotide context
+#'   is observed in the genome
 #' \item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
 #'   occurence in the genome to the trinucleotide's occurence in the exome
 #' \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
@@ -26,7 +33,7 @@
 #' @param genome.ref a reference genome [BSgenome] object to define
 #' trinucleotide's occurence.
 #' @param chr.list what targetedd chromosome should be used in the analysis.
-#' Default: NULL, means all chromosome will be used to calculate fraction. 
+#' Default: NULL, means all chromosome will be used to calculate fraction.
 #' @param exome.range a [GenomicRanges] object define the exome ranges.
 #' @param associated Vector of associated signatures. If given, will narrow the
 #'   signatures tested to only the ones listed.
@@ -39,18 +46,20 @@
 #'   tricontext distribution given, and the unknown weight.
 #' @section Normalization: If the input data frame only contains the counts of
 #'   the mutations observed in each context, then the data frame must be
-#'   normalized. In these cases, the value of `contexts.needed` should be TRUE.
+#'   normalized, An error will be raised if each row of the input data frame
+#'   does not sum to 1. In these cases, the value of `contexts.needed` should be
+#'   TRUE.
 #'   \cr The parameter, `tri.counts.method`, determines any additional
-#'   normalization performed. Any user provided data frames should match the
-#'   format of `tri.counts.exome` and `tri.counts.genome`. \cr The method of
-#'   normalization chosen should match how the input signatures were normalized.
-#'   For exome data, the 'exome2genome' method is appropriate for the signatures
-#'   included in this package. For whole genome data, use the 'default' method
-#'   to obtain consistent results.
+#'   normalization performed for sig.type `SBS`. The method of normalization
+#'   chosen should match how the input signatures were normalized. For exome
+#'   data, the 'exome2genome' method is appropriate for the signatures included
+#'   in this package. For whole genome data, use 'FALSE' to obtain consistent
+#'   results.
 #' @examples
 #' randomly.generated.tumors <- readRDS(
-#'     system.file("extdata", "randomly.generated.tumors.rds",
-#'                 package = "deconstructSigs")
+#'   system.file("extdata", "randomly.generated.tumors.rds",
+#'     package = "deconstructSigs"
+#'   )
 #' )
 #' test <- whichSignatures(
 #'   tumor.ref = randomly.generated.tumors,
@@ -59,34 +68,30 @@
 #' )
 #' @export
 whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
+                            sig.type = "SBS",
                             signatures.ref = NULL,
+                            sig.transpose = TRUE,
                             contexts.needed = TRUE,
-                            tri.counts.method = "default",
+                            tri.counts.method = FALSE,
                             genome.ref = NULL, chr.list = NULL,
                             exome.range = NULL,
                             associated = NULL,
                             signatures.limit = NA,
                             signature.cutoff = 0.06) {
   # check arguments --------------------------------------------------
-  tri.counts.method <- match.arg(
-    tri.counts.method,
-    c("default", "genome", "exome", "exome2genome", "genome2exome")
-  )
+  sig.type <- match.arg(sig.type, c("SBS", "DBS"))
+
   if (is.null(signatures.ref)) {
-    signatures.ref <- read_data("signatures.nature2013")
+    signatures.ref <- switch(sig.type,
+      SBS = "signatures.genome.cosmic.v3.may2019",
+      DBS = "signatures.dbs.cosmic.v3.may2019"
+    )
+    signatures.ref <- read_data(signatures.ref)
+  } else {
+    signatures.ref <- parse_sig(signatures.ref, transpose = sig.transpose)
   }
-  if (ncol(signatures.ref) == 78L && tri.counts.method != "default") {
-    warning("Using default normalization for DBS signatures")
-    tri.counts.method <- "default"
-  }
-  if (!identical(tri.counts.method, "default") && isTRUE(contexts.needed)) {
-    if (!is.null(genome.ref) && !methods::is(genome.ref, "BSgenome")) {
-      stop("genome.ref should be a `BSgenome` object or `NULL`")
-    }
-    if (!is.null(exome.range) && !methods::is(exome.range, "GenomicRanges")) {
-      stop("exome.range shoudl be a `GenomicRanges` object or `NULL`")
-    }
-  }
+  check_sig(signatures.ref, sig.type = sig.type)
+
   # prepare data --------------------------------------------------------
   if (exists("tumor.ref", mode = "list")) {
     tumor <- tumor.ref
@@ -103,14 +108,27 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
   } else {
     stop("Input tumor.ref needs to be a data frame or location of input text file", call. = FALSE)
   }
-
-  if (isTRUE(contexts.needed)) {
+  if (identical(sig.type, "SBS") && !isFALSE(tri.counts.method)) {
+    tri.counts.method <- match.arg(
+      tri.counts.method,
+      c("genome", "exome", "exome2genome", "genome2exome")
+    )
+    if (!is.null(genome.ref) && !methods::is(genome.ref, "BSgenome")) {
+      stop("genome.ref should be a `BSgenome` object or `NULL`")
+    }
+    if (!is.null(exome.range) && !methods::is(exome.range, "GenomicRanges")) {
+      stop("exome.range should be a `GenomicRanges` object or `NULL`")
+    }
     tumor <- getTriContextFraction(
       mut.counts = tumor,
       trimer.counts.method = tri.counts.method,
       genome.ref = genome.ref, chr.list = chr.list,
       exome.range = exome.range
     )
+  }
+  tumor <- as.matrix(tumor)
+  if (isTRUE(contexts.needed)) {
+    tumor <- tumor / rowSums(tumor)
   }
   if (is.null(sample.id)) {
     sample.id <- rownames(tumor)
@@ -120,7 +138,6 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
 
   if (length(sample.id)) {
     # Take patient id given
-    tumor <- as.matrix(tumor)
     res <- lapply(sample.id, function(x) {
       message("Processing sample ", x, appendLF = TRUE)
       sample_tumor <- tumor[x, , drop = FALSE]
@@ -146,17 +163,6 @@ deconstruct_sig_core <- function(tumor, signatures.ref,
                                  associated = NULL,
                                  signatures.limit = NA,
                                  signature.cutoff = 0.06) {
-  # Read in Stratton signatures file
-  if (exists("signatures.ref", mode = "list")) {
-    signatures <- signatures.ref
-  } else {
-    if (file.exists(signatures.ref)) {
-      signatures <- utils::read.csv(signatures.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
-    } else {
-      print("signatures.ref is neither a file nor a loaded data frame")
-    }
-  }
-
   signatures <- as.matrix(signatures)
   original.sigs <- signatures
 

@@ -20,7 +20,8 @@
 #' @param contexts.needed Used for both sig.type "SBS" and "DBS". FALSE if
 #'   tumor.file is a context file, TRUE if it is only mutation counts. Default:
 #'   `TRUE`.
-#' @param tri.counts.method Only used when sig.type is `SBS`. Set to either:
+#' @param tri.counts.method Only used when sig.type is `SBS`. when used,
+#' `contexts.needed` will always be set to `TRUE`. Set to either:
 #' \itemize{
 #'  \item 'exome' -- normalized by number of times each trinucleotide context is
 #'   observed in the exome
@@ -29,7 +30,8 @@
 #' \item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
 #'   occurence in the genome to the trinucleotide's occurence in the exome
 #' \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
-#'   occurence in the exome to the trinucleotide's occurence in the genome}
+#'   occurence in the exome to the trinucleotide's occurence in the genome
+#' }
 #' @param genome.ref a reference genome [BSgenome] object to define
 #' trinucleotide's occurence.
 #' @param chr.list what targetedd chromosome should be used in the analysis.
@@ -118,6 +120,10 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
     }
     if (!is.null(exome.range) && !methods::is(exome.range, "GenomicRanges")) {
       stop("exome.range should be a `GenomicRanges` object or `NULL`")
+    }
+    if (!isTRUE(contexts.needed)) {
+      warning("Set contexts.needed to `TRUE` when applying `tri.counts.method` normalization", call. = FALSE)
+      contexts.needed <- TRUE
     }
     tumor <- getTriContextFraction(
       mut.counts = tumor,

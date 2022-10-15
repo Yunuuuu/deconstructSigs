@@ -43,7 +43,8 @@ which is ofthen the case where we derived signature from COSMIC.}
 tumor.file is a context file, TRUE if it is only mutation counts. Default:
 \code{TRUE}.}
 
-\item{tri.counts.method}{Only used when sig.type is \code{SBS}. Set to either:
+\item{tri.counts.method}{Only used when sig.type is \code{SBS}. when used,
+\code{contexts.needed} will always be set to \code{TRUE}. Set to either:
 \itemize{
 \item 'exome' -- normalized by number of times each trinucleotide context is
 observed in the exome
@@ -52,7 +53,8 @@ is observed in the genome
 \item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
 occurence in the genome to the trinucleotide's occurence in the exome
 \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
-occurence in the exome to the trinucleotide's occurence in the genome}}
+occurence in the exome to the trinucleotide's occurence in the genome
+}}
 
 \item{genome.ref}{a reference genome \link{BSgenome} object to define
 trinucleotide's occurence.}

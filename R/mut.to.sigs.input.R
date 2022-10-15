@@ -81,7 +81,7 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
       ]
     ]
     mut[, dbs_condensed := factor(
-      dbs_condensed, unique(dbs_possible$dbs_condenseds)
+      dbs_condensed, unique(dbs_possible$dbs_condensed)
     )]
     final.df <- as.data.frame(
       table(
@@ -246,6 +246,9 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
     # final.df <- final.df[, colnames(final.df2)]
     # all(colnames(final.df) == colnames(final.df2))
     # all(final.df == final.df2) # [1] TRUE
+  }
+  if (identical(nrow(final.df), 0L)) {
+    stop("No meaningful mutation found to comply with signature features.")
   }
   data.table::setDT(final.df)
   final.df <- data.table::dcast(

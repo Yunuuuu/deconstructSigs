@@ -13,12 +13,9 @@
 #'   starting http://, file://, etc), whose rows should be signatures and
 #'   columns should be trinucleotide or dinucleotide contexts. Default: NULL,
 #'   means `signatures.genome.cosmic.v3.may2019` for sig.type "SBS",
-#'   "signatures.dbs.cosmic.v3.may2019" for sig.type "DBS".
+#'   `signatures.dbs.cosmic.v3.may2019` for sig.type "DBS".
 #' @param sig.transpose should `signatures.ref` be transposed? Default: `TRUE`,
-#' which is ofthen the case where we derived signature from COSMIC.
-#' @param contexts.needed Used for both sig.type "SBS" and "DBS". FALSE if
-#'   tumor.file is a context file, TRUE if it is only mutation counts. Default:
-#'   `TRUE`.
+#' which is often the case where we derived signature from COSMIC.
 #' @param tri.counts.method Only used when sig.type is `SBS`. when used,
 #' `contexts.needed` will always be set to `TRUE`. Set to either:
 #' \itemize{
@@ -31,10 +28,14 @@
 #' \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
 #'   occurence in the exome to the trinucleotide's occurence in the genome
 #' }
+#' @param contexts.needed Used for both sig.type "SBS" and "DBS". FALSE if
+#'   tumor.file is a context file, TRUE if it is only mutation counts. Default:
+#'   `TRUE`.
 #' @param genome.ref a reference genome [BSgenome] object to define
 #' trinucleotide's occurence.
-#' @param chr.list what targetedd chromosome should be used in the analysis.
-#' Default: NULL, means all chromosome will be used to calculate fraction.
+#' @param chr.list indicates which chromosome should be used for the
+#'   trinucleotide context normalization. Default: NULL, means all chromosome
+#'   will be used to calculate fraction.
 #' @param exome.range a [GenomicRanges] object define the exome ranges.
 #' @param associated Vector of associated signatures. If given, will narrow the
 #'   signatures tested to only the ones listed.
@@ -72,8 +73,8 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
                             sig.type = "SBS",
                             signatures.ref = NULL,
                             sig.transpose = TRUE,
-                            contexts.needed = TRUE,
                             tri.counts.method = FALSE,
+                            contexts.needed = TRUE,
                             genome.ref = NULL, chr.list = NULL,
                             exome.range = NULL,
                             associated = NULL,

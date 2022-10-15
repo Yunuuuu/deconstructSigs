@@ -10,8 +10,8 @@ whichSignatures(
   sig.type = "SBS",
   signatures.ref = NULL,
   sig.transpose = TRUE,
-  contexts.needed = TRUE,
   tri.counts.method = FALSE,
+  contexts.needed = TRUE,
   genome.ref = NULL,
   chr.list = NULL,
   exome.range = NULL,
@@ -33,14 +33,10 @@ Default: \code{NULL}, means run deconstructSigs for all samples (rows)}
 starting http://, file://, etc), whose rows should be signatures and
 columns should be trinucleotide or dinucleotide contexts. Default: NULL,
 means \code{signatures.genome.cosmic.v3.may2019} for sig.type "SBS",
-"signatures.dbs.cosmic.v3.may2019" for sig.type "DBS".}
+\code{signatures.dbs.cosmic.v3.may2019} for sig.type "DBS".}
 
 \item{sig.transpose}{should \code{signatures.ref} be transposed? Default: \code{TRUE},
-which is ofthen the case where we derived signature from COSMIC.}
-
-\item{contexts.needed}{Used for both sig.type "SBS" and "DBS". FALSE if
-tumor.file is a context file, TRUE if it is only mutation counts. Default:
-\code{TRUE}.}
+which is often the case where we derived signature from COSMIC.}
 
 \item{tri.counts.method}{Only used when sig.type is \code{SBS}. when used,
 \code{contexts.needed} will always be set to \code{TRUE}. Set to either:
@@ -55,11 +51,16 @@ occurence in the genome to the trinucleotide's occurence in the exome
 occurence in the exome to the trinucleotide's occurence in the genome
 }}
 
+\item{contexts.needed}{Used for both sig.type "SBS" and "DBS". FALSE if
+tumor.file is a context file, TRUE if it is only mutation counts. Default:
+\code{TRUE}.}
+
 \item{genome.ref}{a reference genome \link{BSgenome} object to define
 trinucleotide's occurence.}
 
-\item{chr.list}{what targetedd chromosome should be used in the analysis.
-Default: NULL, means all chromosome will be used to calculate fraction.}
+\item{chr.list}{indicates which chromosome should be used for the
+trinucleotide context normalization. Default: NULL, means all chromosome
+will be used to calculate fraction.}
 
 \item{exome.range}{a \link{GenomicRanges} object define the exome ranges.}
 
